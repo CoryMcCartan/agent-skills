@@ -20,9 +20,10 @@ ANY reason to reject the package.
 
 Start by checking if this is a new submission by seeing if the following URL
 with the package name substituted exists. If not (404), then it's a new
-submission and the checks will be even more strict.
+submission and the checks will be even more strict. Also check if there 
+are reverse dependencies.
 ```sh
-curl -s -o /dev/null -w "%{http_code}\n" https://cran.r-project.org/web/packages/<PACKAGE>/index.html
+curl -s https://cran.r-project.org/web/packages/<PACKAGE>/index.html | grep -E "(404|Reverse)"
 ```
 
 Execute these phases in order. Phases 3–4 repeat until the package is clean.
@@ -36,7 +37,6 @@ General notes:
 - You can safely ignore the following NOTEs and not report them in `cran-comments.md`:
   - unable to verify current time
   - Skipping checking HTML validation: 'tidy' doesn't look like recent enough HTML Tidy.
-- At the end, only summarize changes and action items, NOT tasks completed.
 
 ## Phase 1: Automated Checks and Fixes
 
@@ -95,7 +95,7 @@ issues from the report.
 
 ### 1.5 Reverse dependency checks
 
-Only if the package is already on CRAN with reverse dependencies:
+ONLY if the package is already on CRAN with reverse dependencies:
 
 ```r
 if (requireNamespace("revdepcheck", quietly = TRUE)) {
@@ -171,7 +171,7 @@ Report all findings to the user before proceeding to fixes.
 Fix every issue found in Phase 3. After fixing:
 1. Re-run `devtools::document()` if roxygen comments changed
 2. Re-run `devtools::check(remote = TRUE, manual = TRUE)`
-3. Update `cran-comments.md` with fresh check results
+3. Update `cran-comments.md` as needed
 
 ## Phase 5: Iterate
 
@@ -191,3 +191,4 @@ Remind them to run the following after acceptance:
 usethis::use_github_release()
 usethis::use_dev_version()
 ```
+At the end, only summarize changes and action items, NOT tasks completed.
