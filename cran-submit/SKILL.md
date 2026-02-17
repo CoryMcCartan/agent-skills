@@ -4,7 +4,7 @@ description: >
   Prepare and submit an R package to CRAN. Use this skill when asked to submit
   a package to CRAN, prepare for CRAN submission, run CRAN checks, or review a
   package for CRAN compliance. Assumes the working directory is an R package root.
-license: MIT
+license: CC-BY-4.0
 metadata:
   author: Cory McCartan
   version: "0.1"
@@ -157,7 +157,7 @@ Check all of these:
 This is the most critical phase. Read through the package with a CRAN
 reviewer's mindset. Do NOT make changes yet—just catalog every issue.
 For the detailed checklist of what to look for, see
-[cran-review-checklist.md](cran-review-checklist.md).
+[resources/cran-review-checklist.md](resources/cran-review-checklist.md).
 
 Perform every check in that checklist systematically. Use grep/search tools
 to scan ALL R files, tests, examples, vignettes, and man pages. Read every
