@@ -4,6 +4,11 @@ description: >
   Prepare and submit an R package to CRAN. Use this skill when asked to submit
   a package to CRAN, prepare for CRAN submission, run CRAN checks, or review a
   package for CRAN compliance. Assumes the working directory is an R package root.
+license: MIT
+metadata:
+  author: Cory McCartan
+  version: "0.1"
+allowed-tools: Bash(curl) Read Write
 ---
 
 # CRAN Package Submission
@@ -21,6 +26,17 @@ curl -s -o /dev/null -w "%{http_code}\n" https://cran.r-project.org/web/packages
 ```
 
 Execute these phases in order. Phases 3–4 repeat until the package is clean.
+
+General notes:
+
+- Run `devtools::check()` with `R_MAKEVARS_USER=NULL` to avoid local settings
+  causing false positives
+- Don't duplicatively check things which are checked by `devtools::check()`. 
+  These are listed in the output of the check function.
+- You can safely ignore the following NOTEs and not report them in `cran-comments.md`:
+  - unable to verify current time
+  - Skipping checking HTML validation: 'tidy' doesn't look like recent enough HTML Tidy.
+- At the end, only summarize changes and action items, NOT tasks completed.
 
 ## Phase 1: Automated Checks and Fixes
 

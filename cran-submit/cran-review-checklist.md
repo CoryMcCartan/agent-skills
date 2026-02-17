@@ -209,17 +209,6 @@ Exceptions to the rules, if justified, should be documented in `cran-comments.md
 - [ ] Packages in Suggests are conditionally loaded with
       `requireNamespace()` checks
 
-## Package Size
-
-Package tarball is produced when `devtools::check()` is run and is in the
-parent directory of the R package directory.
-
-- [ ] Package tarball is under 5 MB (strongly preferred)
-- [ ] Package tarball is under 10 MB (hard limit; requires CRAN approval)
-- [ ] No unnecessarily large files in `inst/`, `data/`, or `extdata/`
-- [ ] Large datasets are externalized or in a separate data package
-- [ ] If size exceeds 5 MB, explain why in `cran-comments.md`
-
 ## Compiled Code (if the package has src/)
 
 - [ ] No compiler warnings with `-Wall -pedantic`
