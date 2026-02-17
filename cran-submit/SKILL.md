@@ -8,7 +8,7 @@ license: MIT
 metadata:
   author: Cory McCartan
   version: "0.1"
-allowed-tools: Bash(curl) Read Write
+allowed-tools: shell(curl:*) shell(git:log) shell(git:tag) shell(git:diff) shell(Rscript) shell(grep:*) shell(find:*) read write ask_user
 ---
 
 # CRAN Package Submission
@@ -83,13 +83,15 @@ devtools::spell_check()
 ### 1.5 Win-builder
 
 Submit to win-builder (required by CRAN policy—checks against R-devel on Windows):
+ASK the user for confirmation first: they may decline, if the package was checked recently on win-builder.
+Continue to the next step regardless of their response.
 
 ```r
 devtools::check_win_devel()
 ```
 
 Tell the user results arrive by email in ~30 minutes. Ask them to share any
-issues from the report before proceeding.
+issues from the report.
 
 ### 1.5 Reverse dependency checks
 
