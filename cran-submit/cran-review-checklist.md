@@ -6,6 +6,9 @@ examples, vignettes, and man pages.
 
 ## DESCRIPTION File
 
+If this is not a new submission, check for any changes with `git diff` from the
+last release/tag, and only check the elements that have changed.
+
 - [ ] `Title` is in Title Case (verify with `tools::toTitleCase()`)
 - [ ] `Title` does NOT start with "A Package for...", "R Package for...",
       "Tools for...", or similar redundant phrasing
@@ -26,15 +29,13 @@ examples, vignettes, and man pages.
 - [ ] `Authors@R` includes a copyright holder ('cph' role)
 - [ ] Maintainer email is a real, monitored address (not noreply)
 - [ ] ORCID identifiers are included where available
-- [ ] `License` is FOSS-compatible and listed in R's license database
 - [ ] `License` does NOT include unnecessary `+ file LICENSE` for standard
       licenses (only needed for MIT, BSD, etc. that require attribution)
-- [ ] If `+ file LICENSE` is used, the LICENSE file contains ONLY
-      year + copyright holder (MIT) or year + holder + org (BSD)
 - [ ] Version number follows `x.y.z` format, no leading zeros
 - [ ] `Depends: R (>= x.y.z)` version is not unreasonably recent
-- [ ] `LazyData: true` is set if the package includes data in `data/`
-- [ ] No `LazyData` field if the package has no data
+- [ ] `LazyData: true` is set if the package includes data in `data/`; 
+       No `LazyData` field if the package has no data
+- [ ] System requirements are documented in `SystemRequirements` field
 - [ ] `URL` and `BugReports` fields point to valid, accessible URLs
 
 ## R Code — Policy Violations
@@ -175,6 +176,7 @@ Remove all debugging calls before submission.
 ## Examples (man/ and roxygen @examples)
 
 Check EVERY exported function. Read the man pages or roxygen comments.
+Exceptions to the rules, if justified, should be documented in `cran-comments.md`.
 
 - [ ] Every exported function has `@examples` or `\examples{}`
 - [ ] Every exported function has `@returns` or `\value{}`
@@ -189,28 +191,18 @@ Check EVERY exported function. Read the man pages or roxygen comments.
 - [ ] Examples that create files use `tempdir()`/`tempfile()` and clean up
       (cleanup can go in `\dontshow{}` for aesthetics)
 - [ ] Examples that change `par()`/`options()`/`setwd()` save and restore
-- [ ] Examples use small, fast toy datasets — not large computations
 - [ ] No examples are entirely commented out
 - [ ] Function names in documentation use `()`: `foo()` not `foo`
 
 ## Tests
 
-- [ ] Tests don't write to the user's home directory or package directory.
-      Use `tempdir()`, `tempfile()`, `withr::local_tempfile()`, or
-      `withr::local_tempdir()` and clean up with `unlink()`
-- [ ] Tests clean up all temporary files (check for "detritus in temp dir" NOTE)
-- [ ] Tests don't use more than 2 cores
 - [ ] Tests don't install packages
 - [ ] Tests that require internet access use `skip_on_cran()`
 - [ ] Flaky tests (random failures, timing-dependent) use `skip_on_cran()`
-- [ ] Tests don't modify global state (options, env vars, wd, par, .GlobalEnv)
-      without restoration — use `withr::local_options()`, `withr::local_envvar()`, etc.
 - [ ] No `rm(list = ls())` in test files
 
 ## Vignettes
 
-- [ ] All vignettes build without errors
-- [ ] Total check time (examples + tests + vignettes) < 10 minutes
 - [ ] Vignettes don't write to user's filespace
 - [ ] Vignettes restore any changed options/par/wd
 - [ ] Expensive computations use pre-computed results or `\donttest{}`
@@ -218,6 +210,9 @@ Check EVERY exported function. Read the man pages or roxygen comments.
       `requireNamespace()` checks
 
 ## Package Size
+
+Package tarball is produced when `devtools::check()` is run and is in the
+parent directory of the R package directory.
 
 - [ ] Package tarball is under 5 MB (strongly preferred)
 - [ ] Package tarball is under 10 MB (hard limit; requires CRAN approval)
@@ -230,19 +225,9 @@ Check EVERY exported function. Read the man pages or roxygen comments.
 - [ ] No compiler warnings with `-Wall -pedantic`
 - [ ] Properly registers native routines (`useDynLib` + `R_registerRoutines`)
 - [ ] Uses R's RNG (`GetRNGstate()`/`PutRNGstate()`), not `srand()`/`rand()`
-- [ ] No memory leaks (test with valgrind/ASAN if possible)
 - [ ] Clean address-sanitizer results (no buffer overflows, use-after-free)
 - [ ] `Makevars` doesn't set `-O0` or other non-portable flags
 - [ ] C++ standard is properly declared if needed (e.g., `CXX_STD = CXX17`)
-
-## Namespace and Dependencies
-
-- [ ] All imported functions are properly declared in NAMESPACE
-- [ ] No `library()` or `require()` calls in R/ code
-- [ ] Packages in Suggests are used conditionally with `requireNamespace()`
-- [ ] No circular dependencies
-- [ ] Dependencies are minimal — don't add heavy packages for minor features
-- [ ] System requirements are documented in `SystemRequirements` field
 
 ## Package Hooks and Load/Attach Behavior
 
@@ -256,8 +241,6 @@ Check EVERY exported function. Read the man pages or roxygen comments.
 ## Miscellaneous
 
 - [ ] No `rm(list = ls())` in examples, vignettes, or demos
-- [ ] No malicious or anti-social code
-- [ ] No tracking/analytics/telemetry without explicit user consent
 - [ ] All included third-party code has its license properly declared
 - [ ] `inst/CITATION` file (if present) uses proper `bibentry()` format
 - [ ] No files left over from development (`.DS_Store`, `Thumbs.db`,

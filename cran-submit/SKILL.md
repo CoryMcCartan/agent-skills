@@ -13,6 +13,13 @@ resubmission cycles—CRAN reviewers are overworked volunteers and every round-t
 wastes days. Be adversarial: pretend you are a strict CRAN reviewer looking for
 ANY reason to reject the package.
 
+Start by checking if this is a new submission by seeing if the following URL
+with the package name substituted exists. If not (404), then it's a new
+submission and the checks will be even more strict.
+```sh
+curl -s -o /dev/null -w "%{http_code}\n" https://cran.r-project.org/web/packages/<PACKAGE>/index.html
+```
+
 Execute these phases in order. Phases 3–4 repeat until the package is clean.
 
 ## Phase 1: Automated Checks and Fixes
@@ -47,7 +54,17 @@ causes a false positive, convert to non-hyperlinked verbatim text.
 if (file.exists("README.Rmd")) devtools::build_readme()
 ```
 
-### 1.4 Win-builder
+### 1.4 Spell check
+
+Often, spell check flags are false positives. But if there are common 
+mispellings, fix them yourself. If unsure, flag the next time you report
+back to the user.
+
+```r
+devtools::spell_check()
+```
+
+### 1.5 Win-builder
 
 Submit to win-builder (required by CRAN policy—checks against R-devel on Windows):
 
@@ -75,19 +92,24 @@ breakages.
 
 ### 2.1 Version number
 
-Ask the user what release type this is (patch/minor/major), then:
-
-```r
-usethis::use_version("minor")
-```
+Read the version from DESCRIPTION and ask the user whether to update the version
+or keep it as is. Edit DESCRIPTION directly.
 
 ### 2.2 NEWS.md
 
-Ensure it exists (`usethis::use_news_md()` if not). Polish it:
-- Organize under headings: New features, Bug fixes, Breaking changes, etc.
-- Each bullet is a complete sentence referencing issue/PR numbers
-- Remove internal-only changes users don't care about
-- Follow tidyverse news style
+Ensure it exists (`usethis::use_news_md()` if not). If it doesn't already
+exist, add a section for the new version. Polish it:
+- Every user-facing change should be given a bullet in NEWS.md. Do not add
+  bullets for small documentation changes or internal refactorings.
+- Each bullet should briefly describe the change to the end user and mention
+  the related issue in parentheses.
+- A bullet can consist of multiple sentences but should not contain any new
+  lines (i.e. DO NOT line wrap).
+- If the change is related to a function, put the name of the function early in
+  the bullet.
+- Order bullets alphabetically by function name. Put all bullets that don't
+  mention function names at the beginning.
+
 
 ### 2.3 cran-comments.md
 
@@ -110,7 +132,6 @@ Check all of these:
   in format `Author (year) <doi:10.prefix/suffix>`. URLs in angle brackets.
 - `Authors@R`: includes copyright holder (role 'cph'). Maintainer email is
   correct and actively monitored. ORCIDs included where available.
-- `License`: correct, no unnecessary `+ file LICENSE` for standard licenses
 - `Depends`: R version requirement not too recent without good reason
 
 ## Phase 3: Adversarial Review (Read-Only)
@@ -137,29 +158,17 @@ Fix every issue found in Phase 3. After fixing:
 ## Phase 5: Iterate
 
 Return to Phase 3. Repeat Phases 3–4 until the adversarial review finds
-ZERO issues. Then run a final check:
-
-```r
-devtools::check(remote = TRUE, manual = TRUE)
-```
+ZERO issues. 
 
 Confirm 0 errors, 0 warnings, and only explained NOTEs.
 
 ## Phase 6: Submit
 
-First, commit all changes locally. Then run:
+Ask the user to commit all changes locally with `git`.
 
-```r
-devtools::submit_cran()
-```
+Then tell the user to submit to CRAN with `devtools::submit_cran()`.
+Remind them to run the following after acceptance:
 
-Remind the user to:
-1. Check email for the CRAN confirmation link (arrives within minutes)
-2. Click the link and agree to policies—submission is NOT complete without this
-3. Wait for automated check results (usually hours)
-4. First submissions get additional human review (takes longer)
-
-After acceptance:
 ```r
 usethis::use_github_release()
 usethis::use_dev_version()
